@@ -1,11 +1,11 @@
 import sys 
-import requests 
+import requests
 
 todo_id = sys.argv[1]
 url =f"https://jsonplaceholder.typicode.com/todos/{todo_id}"
 
 try:
-    response= requests.get(url)
+    response= requests.get(url, timeout=5)
     response.raise_for_status()
     data = response.json()
     
@@ -17,5 +17,12 @@ try:
         print("Status : Done")
     else:
         print("Status: Pending")
+
+except requests.Timeout:
+    print("Request timed out. Please try again.")
+except requests.ConnectionError:
+    print("Could not connect to the server. ")
 except requests.HTTPError:
     print("Todo not found.")
+except requests.RequestException:
+    print("Something went wrong while making the request.")
